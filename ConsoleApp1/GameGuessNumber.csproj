@@ -8,7 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Новая папка\" />
+    <Folder Include="GuessNumber\Interfaces\" />
+    <Folder Include="GuessNumber\Events\" />
   </ItemGroup>
 
 </Project>
