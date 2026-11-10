@@ -1,7 +1,7 @@
 using GuessNumber.Events;
 using GuessNumber.Data;
 
-namespace GuessNumber.Interfaces
+namespace GameGuessNumber.GuessNumber.Interfaces
 {
     /// <summary>
     /// Интерфейс для игровых уровней

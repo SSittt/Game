@@ -1,6 +1,6 @@
 using GuessNumber.Data;
 
-namespace GuessNumber.Interfaces
+namespace GameGuessNumber.GuessNumber.Interfaces
 {
     /// <summary>
     /// Интерфейс для работы с данными игры
