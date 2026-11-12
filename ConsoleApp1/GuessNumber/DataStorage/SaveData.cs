@@ -12,29 +12,38 @@ namespace GameGuessNumber.GuessNumber.DataStorage
     /// </summary>
     public class SaveData : IDataManager
     {
+        /// <summary>
+        /// Путь к папке, где будут храниться файлы с данными
+        /// </summary>
         private string folderPath;
+        /// <summary>
+        /// Имя файла для сохранения информации об игроке
+        /// </summary>
         private string playerInfoPath;
+        /// <summary>
+        /// Путь к файлу, в котором будут храниться результаты игр
+        /// </summary>
         private string statisticsPath;
 
+        /// <summary>
+        /// Создаёт экземпляр класса SaveData и инициализирует пути к файлам для сохранения данных.
+        /// </summary>
         public SaveData()
         {
-            // Путь к папке с файлами
+         
             folderPath = Path.Combine(
                 AppDomain.CurrentDomain.BaseDirectory,
                 "DataFiles"
             );
 
-            // Создаём папку, если её нет
             if (!Directory.Exists(folderPath))
             {
                 Directory.CreateDirectory(folderPath);
             }
 
-            // Пути к JSON-файлам
             playerInfoPath = Path.Combine(folderPath, "playerInfo.json");
             statisticsPath = Path.Combine(folderPath, "statistics.json");
 
-            // Создаём файлы, если их нет
             if (!File.Exists(playerInfoPath))
             {
                 File.WriteAllText(playerInfoPath, "{}");

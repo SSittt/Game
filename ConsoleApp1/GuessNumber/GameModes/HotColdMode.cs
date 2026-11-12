@@ -30,7 +30,27 @@ namespace GuessNumber.GameModes
         }
 
         /// <summary>
-        /// Показывает рисунок при проигрыше.
+        /// Показывает рисунок при победе.
+        /// </summary>
+        private void Winner()
+        {
+            SendMessage(@"
+
+                    .-=========-.
+                    \'-=======-'/
+                    _|   WIN   |_
+                   ((|   YOU   |))
+                    \|   WON!  |/
+                     \_________/
+                      _|_____|_
+                     /_________\
+
+                     You're cool! 
+            ");
+        }
+
+        /// <summary>
+        /// Показывает рисунок при проигрыше с надписью "LOSER".
         /// </summary>
         private void Loser()
         {
@@ -59,19 +79,23 @@ namespace GuessNumber.GameModes
         {
             Random random = new Random();
 
+            // Загадываем случайное число от 1 до 100.
             int secretNumber = random.Next(1, 101);
+
             int attempts = 0;
             bool isWin = false;
 
             SendMessage("Угадай число от 1 до 100.");
             SendMessage("У тебя есть 7 попыток, чтобы угадать число.");
 
+            // Игрок может сделать не больше 7 попыток.
             while (attempts < 7)
             {
                 SendMessage($"Попытка {attempts + 1}: введи число от 1 до 100:");
 
                 string? input = Console.ReadLine();
 
+                // Проверяем правильность введённого значения.
                 if (!int.TryParse(input, out int guess) || guess < 1 || guess > 100)
                 {
                     SendMessage("Пожалуйста, введи число от 1 до 100.");
@@ -80,6 +104,7 @@ namespace GuessNumber.GameModes
 
                 attempts++;
 
+                // Проверяем, угадал ли игрок число.
                 if (guess == secretNumber)
                 {
                     isWin = true;
@@ -87,6 +112,7 @@ namespace GuessNumber.GameModes
                 }
                 else
                 {
+                    // Определяем, насколько близко игрок к загаданному числу.
                     int difference = Math.Abs(secretNumber - guess);
 
                     if (difference <= 5)
@@ -104,9 +130,11 @@ namespace GuessNumber.GameModes
                 }
             }
 
+            // Показываем результат игры.
             if (isWin)
             {
                 SendMessage($"Поздравляем, {playerName}! Ты угадал число {secretNumber} за {attempts} попыток.");
+                Winner();
             }
             else
             {
@@ -115,6 +143,7 @@ namespace GuessNumber.GameModes
                 Loser();
             }
 
+            // Возвращаем результат игры для сохранения статистики.
             return new GameResult
             {
                 PlayerName = playerName,

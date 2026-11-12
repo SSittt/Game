@@ -4,28 +4,55 @@ using System.Collections.Generic;
 
 namespace GameGuessNumber.GuessNumber.DataStorage
 {
-    /// <summary>
-    /// Класс для отображения статистики игр
-    /// </summary>
     public class Statistics
     {
         /// <summary>
-        /// Вывод результатов всех игр
+        /// Показывает статистику игрока по его играм.
         /// </summary>
-        public void ShowStatistics(List<GameResult> results)
+        /// <param name="results">Список результатов всех игр.</param>
+        /// <param name="playerName">Имя игрока, для которого отображается статистика.</param>
+        public void ShowStatistics(List<GameResult> results, string playerName)
         {
-            Console.WriteLine("\n СТАТИСТИКА ИГР ");
+            Console.WriteLine("\n===== СТАТИСТИКА ИГРОКА =====");
+            Console.WriteLine("Игрок: " + playerName);
 
-            if (results.Count == 0)
+            List<GameResult> playerResults = results.FindAll(
+                result => result.PlayerName == playerName
+            );
+
+            if (playerResults.Count == 0)
             {
-                Console.WriteLine("Пока игр нет.");
+                Console.WriteLine("У тебя пока нет сыгранных игр.");
                 return;
             }
 
-            foreach (GameResult result in results)
+            int wins = 0;
+            int losses = 0;
+
+            foreach (GameResult result in playerResults)
+            {
+                if (result.IsWin)
+                {
+                    wins++;
+                }
+                else
+                {
+                    losses++;
+                }
+            }
+
+            int winPercent = wins * 100 / playerResults.Count;
+
+            Console.WriteLine("Всего игр: " + playerResults.Count);
+            Console.WriteLine("Побед: " + wins);
+            Console.WriteLine("Поражений: " + losses);
+            Console.WriteLine("Процент побед: " + winPercent + "%");
+
+            Console.WriteLine("\n===== ИСТОРИЯ ИГР =====");
+
+            foreach (GameResult result in playerResults)
             {
                 Console.WriteLine("-------------------------");
-                Console.WriteLine("Игрок: " + result.PlayerName);
                 Console.WriteLine("Уровень: " + result.Difficulty);
                 Console.WriteLine("Результат: " + (result.IsWin ? "Победа" : "Поражение"));
                 Console.WriteLine("Попытки: " + result.Attempts);

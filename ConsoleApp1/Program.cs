@@ -9,20 +9,21 @@ namespace GameGuessNumber
 {
     internal class Program
     {
+        /// <summary>
+        /// программа "Угадай число" с сохранением настроек и статистики игрока.
+        /// </summary>
+        /// <param name="args">Аргументы командной строки.</param>
         static void Main(string[] args)
         {
-            // Создаём объект для работы с файлами
             SaveData dataManager = new SaveData();
 
-            // Загружаем информацию об игроке
             PlayerInfo player = dataManager.LoadSettings();
 
             Console.WriteLine("Игра «Угадай число»");
             Console.WriteLine();
 
-            // Изменение имени игрока
             Console.WriteLine("Текущее имя: " + player.PlayerName);
-            Console.Write("Введите новое имя или нажмите Enter: ");
+            Console.Write("Введите своё имя: ");
 
             string name = Console.ReadLine() ?? "";
 
@@ -31,7 +32,6 @@ namespace GameGuessNumber
                 player.PlayerName = name;
             }
 
-            // Выбор уровня сложности
             Console.WriteLine("\nВыбранный уровень: " + player.Difficulty);
             Console.WriteLine("Выберите уровень сложности:");
             Console.WriteLine("1. Сужение диапазона");
@@ -64,16 +64,14 @@ namespace GameGuessNumber
                     break;
             }
 
-            // Сохраняем настройки игрока
+
             dataManager.SaveSettings(player);
 
             Console.WriteLine("\nПривет, " + player.PlayerName + "!");
             Console.WriteLine("Текущий уровень: " + player.Difficulty);
 
-            // Загружаем статистику
             List<GameResult> results = dataManager.LoadResults();
 
-            // Создаём объект статистики
             Statistics statistics = new Statistics();
 
             bool exit = false;
@@ -91,6 +89,7 @@ namespace GameGuessNumber
                 switch (choice)
                 {
                     case "1":
+
                         // Создаём выбранный игровой режим
                         IGameLevel game;
 
@@ -111,35 +110,34 @@ namespace GameGuessNumber
                             game = new NarrowRangeMode();
                         }
 
-                        // Подписываемся на события игры
                         game.GameEvent += (sender, message) =>
                         {
                             Console.WriteLine(message.Message);
                         };
 
-                        // Запускаем игру
                         GameResult result = game.Play(player.PlayerName);
 
-                        // Добавляем результат в список
                         results.Add(result);
 
-                        // Сохраняем статистику
                         dataManager.SaveResults(results);
 
                         Console.WriteLine("\nРезультат игры сохранён!");
                         break;
 
                     case "2":
-                        // Показываем статистику
-                        statistics.ShowStatistics(results);
+
+
+                        statistics.ShowStatistics(results, player.PlayerName);
                         break;
 
                     case "0":
+
                         exit = true;
                         Console.WriteLine("До свидания!");
                         break;
 
                     default:
+
                         Console.WriteLine("Неверный пункт меню.");
                         break;
                 }

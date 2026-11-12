@@ -29,6 +29,26 @@ namespace GuessNumber.GameModes
         }
 
         /// <summary>
+        /// Показывает рисунок при победе.
+        /// </summary>
+        private void Winner()
+        {
+            SendMessage(@"
+
+                    .-=========-.
+                    \'-=======-'/
+                    _|   WIN   |_
+                   ((|   YOU   |))
+                    \|   WON!  |/
+                     \_________/
+                      _|_____|_
+                     /_________\
+
+                     You're cool!
+            ");
+        }
+
+        /// <summary>
         /// Запускает первый уровень сложности.
         /// </summary>
         public GameResult Play(string playerName)
@@ -46,7 +66,6 @@ namespace GuessNumber.GameModes
 
             while (attempts < 10)
             {
-                // Показываем подсказку в зависимости от диапазона
                 if (max - min + 1 == 2)
                 {
                     SendMessage("Ты уже очень близко к загаданному числу!");
@@ -63,7 +82,7 @@ namespace GuessNumber.GameModes
 
                 string? input = Console.ReadLine();
 
-                // Проверяем правильность введённого числа
+                // Проверяем правильность введённого значения.
                 if (!int.TryParse(input, out int guess) || guess < min || guess > max)
                 {
                     if (max - min + 1 == 2)
@@ -84,11 +103,12 @@ namespace GuessNumber.GameModes
 
                 attempts++;
 
-                // Проверяем, угадал ли игрок число
+                // Проверяем, угадал ли игрок число.
                 if (guess == secretNumber)
                 {
                     isWin = true;
                     SendMessage("Поздравляем! Ты угадал число!");
+                    Winner();
                     break;
                 }
                 else if (guess < secretNumber)
@@ -102,7 +122,6 @@ namespace GuessNumber.GameModes
 
                 SendMessage("Внимание! Диапазон возможных чисел сузился.");
 
-                // Не показываем маленький диапазон
                 if (max - min + 1 <= 2)
                 {
                     SendMessage("Ты уже очень близко к загаданному числу!");
@@ -113,7 +132,7 @@ namespace GuessNumber.GameModes
                 }
             }
 
-            // Если игрок не угадал число за 10 попыток
+            // Если игрок не угадал число за 10 попыток.
             if (!isWin)
             {
                 SendMessage($"Попытки закончились. Загаданное число: {secretNumber}");
@@ -131,7 +150,7 @@ namespace GuessNumber.GameModes
         }
 
         /// <summary>
-        /// Показывает рисунок при проигрыше.
+        /// Показывает рисунок при проигрыше с надписью "LOSER".
         /// </summary>
         private void Loser()
         {
