@@ -1,5 +1,5 @@
-using GuessNumber.Events;
 using GuessNumber.Data;
+using GameGuessNumber.GuessNumber.Events;
 
 namespace GameGuessNumber.GuessNumber.Interfaces
 {

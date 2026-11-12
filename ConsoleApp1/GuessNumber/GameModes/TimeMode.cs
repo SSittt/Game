@@ -1,38 +1,123 @@
+
+using GameGuessNumber.GuessNumber.Events;
 using GameGuessNumber.GuessNumber.Interfaces;
 using GuessNumber.Data;
-using GuessNumber.Events;
+using System;
 using System.Diagnostics;
 
 namespace GuessNumber.GameModes
 {
     /// <summary>
     /// Третий уровень сложности. Игрок должен угадать число
-    /// за 60 секунд. За каждую ошибку отнимается 5 секунд.
+    /// от 1 до 100 за 60 секунд.
+    /// За каждый неправильный ответ отнимается 5 секунд.
     /// </summary>
     public class TimeMode : IGameLevel
     {
-        /// <summary>
-        /// Название уровня сложности.
-        /// </summary>
         public string Name => "Режим на время";
 
-        /// <summary>
-        /// Событие для отправки сообщений игроку.
-        /// </summary>
         public event EventHandler<GameMessage>? GameEvent;
 
-        /// <summary>
-        /// Отправляет сообщение игроку.
-        /// </summary>
-        /// <param name="message">Текст сообщения.</param>
         private void SendMessage(string message)
         {
             GameEvent?.Invoke(this, new GameMessage(message));
         }
 
-        /// <summary>
-        /// Показывает рисунок при проигрыше.
-        /// </summary>
+        public GameResult Play(string playerName)
+        {
+            Random random = new Random();
+
+            // Загадываем число от 1 до 100
+            int secretNumber = random.Next(1, 101);
+
+            int attempts = 0;
+            int penalty = 0;
+            bool isWin = false;
+
+            // Запускаем таймер на 60 секунд
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            SendMessage("Угадай число от 1 до 100!");
+            SendMessage("У тебя есть 60 секунд.");
+            SendMessage("За каждый неправильный ответ отнимается 5 секунд.");
+
+            while (stopwatch.Elapsed.TotalSeconds + penalty < 60)
+            {
+                // Вычисляем оставшееся время
+                int remainingTime = 60 - (int)stopwatch.Elapsed.TotalSeconds - penalty;
+
+                SendMessage("Осталось времени: " + remainingTime + " секунд.");
+                SendMessage("Введи число от 1 до 100:");
+
+                string? input = Console.ReadLine();
+
+                // Проверяем, не закончилось ли время
+                if (stopwatch.Elapsed.TotalSeconds + penalty >= 60)
+                {
+                    break;
+                }
+
+                // Проверяем введённое значение
+                if (!int.TryParse(input, out int guess) || guess < 1 || guess > 100)
+                {
+                    SendMessage("Пожалуйста, введи число от 1 до 100.");
+                    continue;
+                }
+
+                attempts++;
+
+                // Проверяем, угадал ли игрок
+                if (guess == secretNumber)
+                {
+                    isWin = true;
+                    SendMessage("Поздравляем! Ты угадал число!");
+                    break;
+                }
+
+                // Вычисляем расстояние до загаданного числа
+                int difference = Math.Abs(secretNumber - guess);
+
+                if (difference <= 10)
+                {
+                    SendMessage("Очень близко!");
+                }
+                else if (difference <= 30)
+                {
+                    SendMessage("Близко!");
+                }
+                else
+                {
+                    SendMessage("Далеко!");
+                }
+
+                // За неправильный ответ отнимаем 5 секунд
+                penalty += 5;
+
+                SendMessage("Неправильно! Минус 5 секунд.");
+            }
+
+            stopwatch.Stop();
+
+            // Если игрок не успел угадать число
+            if (!isWin)
+            {
+                SendMessage("Время вышло!");
+                SendMessage("Загаданное число было: " + secretNumber);
+                Loser();
+            }
+
+            // Возвращаем результат игры
+            return new GameResult
+            {
+                PlayerName = playerName,
+                Difficulty = Name,
+                IsWin = isWin,
+                Attempts = attempts,
+                Date = DateTime.Now
+            };
+        }
+
         private void Loser()
         {
             SendMessage(@"
@@ -49,88 +134,6 @@ namespace GuessNumber.GameModes
                        L O S E R
                     H A H A H A !!!
             ");
-        }
-
-        /// <summary>
-        /// Запускает третий уровень сложности.
-        /// </summary>
-        /// <param name="playerName">Имя игрока.</param>
-        /// <returns>Результат игры.</returns>
-        public GameResult Play(string playerName)
-        {
-            Random random = new Random();
-
-            int secretNumber = random.Next(1, 1001);
-            int attempts = 0;
-            int penalty = 0;
-            bool isWin = false;
-
-            Stopwatch stopwatch = new Stopwatch();
-
-            SendMessage("Угадай число от 1 до 1000.");
-            SendMessage("У тебя есть 60 секунд на игру.");
-            SendMessage("За каждую ошибку отнимается 5 секунд.");
-
-            stopwatch.Start();
-
-            while (60 - stopwatch.Elapsed.TotalSeconds - penalty > 0)
-            {
-                double remainingTime = 60 - stopwatch.Elapsed.TotalSeconds - penalty;
-
-                SendMessage($"Осталось времени: {Math.Ceiling(remainingTime)} секунд");
-                SendMessage("Введи число:");
-
-                string? input = Console.ReadLine();
-
-                // Проверяем, не закончилось ли время во время ввода
-                remainingTime = 60 - stopwatch.Elapsed.TotalSeconds - penalty;
-
-                if (remainingTime <= 0)
-                {
-                    break;
-                }
-
-                if (!int.TryParse(input, out int guess) || guess < 1 || guess > 1000)
-                {
-                    SendMessage("Пожалуйста, введи число от 1 до 1000.");
-                    continue;
-                }
-
-                attempts++;
-
-                if (guess == secretNumber)
-                {
-                    isWin = true;
-                    break;
-                }
-                else
-                {
-                    penalty += 5;
-                    SendMessage("Неправильно! Минус 5 секунд.");
-                }
-            }
-
-            stopwatch.Stop();
-
-            if (isWin)
-            {
-                SendMessage($"Поздравляем, {playerName}! Ты угадал число {secretNumber} за {attempts} попыток!");
-            }
-            else
-            {
-                SendMessage($"К сожалению, {playerName}, время закончилось!");
-                SendMessage($"Загаданное число было {secretNumber}.");
-                Loser();
-            }
-
-            return new GameResult
-            {
-                PlayerName = playerName,
-                Difficulty = Name,
-                IsWin = isWin,
-                Attempts = attempts,
-                Date = DateTime.Now
-            };
         }
     }
 }

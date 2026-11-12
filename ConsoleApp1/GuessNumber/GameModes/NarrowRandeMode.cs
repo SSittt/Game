@@ -1,6 +1,6 @@
+using GameGuessNumber.GuessNumber.Events;
 using GameGuessNumber.GuessNumber.Interfaces;
 using GuessNumber.Data;
-using GuessNumber.Events;
 
 namespace GuessNumber.GameModes
 {
@@ -23,7 +23,6 @@ namespace GuessNumber.GameModes
         /// <summary>
         /// Отправляет сообщение игроку.
         /// </summary>
-        /// <param name="message">Текст сообщения.</param>
         private void SendMessage(string message)
         {
             GameEvent?.Invoke(this, new GameMessage(message));
@@ -32,8 +31,6 @@ namespace GuessNumber.GameModes
         /// <summary>
         /// Запускает первый уровень сложности.
         /// </summary>
-        /// <param name="playerName">Имя игрока.</param>
-        /// <returns>Результат игры.</returns>
         public GameResult Play(string playerName)
         {
             Random random = new Random();
@@ -49,18 +46,45 @@ namespace GuessNumber.GameModes
 
             while (attempts < 10)
             {
-                SendMessage($"Попытка {attempts + 1}: введи число от {min} до {max}:");
+                // Показываем подсказку в зависимости от диапазона
+                if (max - min + 1 == 2)
+                {
+                    SendMessage("Ты уже очень близко к загаданному числу!");
+                    SendMessage($"Попытка {attempts + 1}: осталось два варианта. Выбирай: {min} или {max}.");
+                }
+                else if (max - min + 1 == 1)
+                {
+                    SendMessage($"Попытка {attempts + 1}: осталось последнее число. Попробуй угадать!");
+                }
+                else
+                {
+                    SendMessage($"Попытка {attempts + 1}: введи число от {min} до {max}:");
+                }
 
                 string? input = Console.ReadLine();
 
+                // Проверяем правильность введённого числа
                 if (!int.TryParse(input, out int guess) || guess < min || guess > max)
                 {
-                    SendMessage($"Пожалуйста, введи число от {min} до {max}.");
+                    if (max - min + 1 == 2)
+                    {
+                        SendMessage($"Выбери одно из двух чисел: {min} или {max}.");
+                    }
+                    else if (max - min + 1 == 1)
+                    {
+                        SendMessage("Попробуй ещё раз!");
+                    }
+                    else
+                    {
+                        SendMessage($"Пожалуйста, введи число от {min} до {max}.");
+                    }
+
                     continue;
                 }
 
                 attempts++;
 
+                // Проверяем, угадал ли игрок число
                 if (guess == secretNumber)
                 {
                     isWin = true;
@@ -77,9 +101,19 @@ namespace GuessNumber.GameModes
                 }
 
                 SendMessage("Внимание! Диапазон возможных чисел сузился.");
-                SendMessage($"Новый диапазон: от {min} до {max}");
+
+                // Не показываем маленький диапазон
+                if (max - min + 1 <= 2)
+                {
+                    SendMessage("Ты уже очень близко к загаданному числу!");
+                }
+                else
+                {
+                    SendMessage($"Новый диапазон: от {min} до {max}");
+                }
             }
 
+            // Если игрок не угадал число за 10 попыток
             if (!isWin)
             {
                 SendMessage($"Попытки закончились. Загаданное число: {secretNumber}");
@@ -96,6 +130,9 @@ namespace GuessNumber.GameModes
             };
         }
 
+        /// <summary>
+        /// Показывает рисунок при проигрыше.
+        /// </summary>
         private void Loser()
         {
             SendMessage(@"
@@ -113,11 +150,5 @@ namespace GuessNumber.GameModes
                     H A H A H A !!!
             ");
         }
-
-
-
-
-
     }
 }
-

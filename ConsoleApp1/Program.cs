@@ -24,7 +24,7 @@ namespace GameGuessNumber
             Console.WriteLine("Текущее имя: " + player.PlayerName);
             Console.Write("Введите новое имя или нажмите Enter: ");
 
-            string name = Console.ReadLine();
+            string name = Console.ReadLine() ?? "";
 
             if (!string.IsNullOrWhiteSpace(name))
             {
@@ -36,11 +36,11 @@ namespace GameGuessNumber
             Console.WriteLine("Выберите уровень сложности:");
             Console.WriteLine("1. Сужение диапазона");
             Console.WriteLine("2. Горячо-холодно");
-            Console.WriteLine("3. На время");
+            Console.WriteLine("3. Режим на время");
             Console.WriteLine("Нажмите Enter, чтобы оставить прежний уровень.");
             Console.Write("Ваш выбор: ");
 
-            string choice = Console.ReadLine();
+            string choice = Console.ReadLine() ?? "";
 
             switch (choice)
             {
@@ -53,7 +53,7 @@ namespace GameGuessNumber
                     break;
 
                 case "3":
-                    player.Difficulty = "На время";
+                    player.Difficulty = "Режим на время";
                     break;
 
                 case "":
@@ -86,7 +86,7 @@ namespace GameGuessNumber
                 Console.WriteLine("0. Выход");
                 Console.Write("Выбери действие: ");
 
-                choice = Console.ReadLine();
+                choice = Console.ReadLine() ?? "";
 
                 switch (choice)
                 {
@@ -102,9 +102,13 @@ namespace GameGuessNumber
                         {
                             game = new HotColdMode();
                         }
-                        else
+                        else if (player.Difficulty == "Режим на время")
                         {
                             game = new TimeMode();
+                        }
+                        else
+                        {
+                            game = new NarrowRangeMode();
                         }
 
                         // Подписываемся на события игры
@@ -126,6 +130,7 @@ namespace GameGuessNumber
                         break;
 
                     case "2":
+                        // Показываем статистику
                         statistics.ShowStatistics(results);
                         break;
 

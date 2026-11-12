@@ -1,6 +1,6 @@
 using System;
 
-namespace GuessNumber.Events
+namespace GameGuessNumber.GuessNumber.Events
 {
     /// <summary>
     /// класс для хранения сообщения игры

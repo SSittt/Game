@@ -1,6 +1,6 @@
+using GameGuessNumber.GuessNumber.Events;
 using GameGuessNumber.GuessNumber.Interfaces;
 using GuessNumber.Data;
-using GuessNumber.Events;
 
 namespace GuessNumber.GameModes
 {
