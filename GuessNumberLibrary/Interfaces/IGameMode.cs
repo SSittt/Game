@@ -17,7 +17,7 @@ namespace GameGuessNumber.GuessNumber.Interfaces
         /// событие для передачи сообщений во время игры
         /// </summary>
         event EventHandler<GameMessage> GameEvent;
-
+        
         /// <summary>
         /// запуск выбранного уровня
         /// </summary>

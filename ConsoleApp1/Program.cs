@@ -4,20 +4,42 @@ using GuessNumber.Data;
 using GuessNumber.GameModes;
 using GameGuessNumber.GuessNumber.DataStorage;
 using GameGuessNumber.GuessNumber.Interfaces;
+using GameGuessNumber.GuessNumber.Difficulties;
 
 namespace GameGuessNumber
 {
     internal class Program
     {
-        /// <summary>
-        /// программа "Угадай число" с сохранением настроек и статистики игрока.
-        /// </summary>
-        /// <param name="args">Аргументы командной строки.</param>
         static void Main(string[] args)
         {
             SaveData dataManager = new SaveData();
 
             PlayerInfo player = dataManager.LoadSettings();
+
+            // Создаём список уровней сложности
+            List<IDifficulty> difficulties = new List<IDifficulty>
+            {
+                new GameDifficulty("Сужение диапазона",
+                    () => new NarrowRangeMode()),
+             
+                new GameDifficulty("Горячо-холодно",
+                    () => new HotColdMode()),
+
+                new GameDifficulty("Режим на время",
+                    () => new TimeMode())
+            };
+
+            // Ищем сохранённый уровень игрока
+            IDifficulty selectedDifficulty = difficulties[0];
+
+            foreach (IDifficulty difficulty in difficulties)
+            {
+                if (difficulty.Name == player.Difficulty)
+                {
+                    selectedDifficulty = difficulty;
+                    break;
+                }
+            }
 
             Console.WriteLine("Игра «Угадай число»");
             Console.WriteLine();
@@ -32,38 +54,34 @@ namespace GameGuessNumber
                 player.PlayerName = name;
             }
 
-            Console.WriteLine("\nВыбранный уровень: " + player.Difficulty);
+            Console.WriteLine("\nВыбранный уровень: " + selectedDifficulty.Name);
             Console.WriteLine("Выберите уровень сложности:");
-            Console.WriteLine("1. Сужение диапазона");
-            Console.WriteLine("2. Горячо-холодно");
-            Console.WriteLine("3. Режим на время");
+
+            // Выводим все доступные уровни
+            for (int i = 0; i < difficulties.Count; i++)
+            {
+                Console.WriteLine((i + 1) + ". " + difficulties[i].Name);
+            }
+
             Console.WriteLine("Нажмите Enter, чтобы оставить прежний уровень.");
             Console.Write("Ваш выбор: ");
 
             string choice = Console.ReadLine() ?? "";
 
-            switch (choice)
+            if (choice != "")
             {
-                case "1":
-                    player.Difficulty = "Сужение диапазона";
-                    break;
-
-                case "2":
-                    player.Difficulty = "Горячо-холодно";
-                    break;
-
-                case "3":
-                    player.Difficulty = "Режим на время";
-                    break;
-
-                case "":
-                    break;
-
-                default:
+                if (int.TryParse(choice, out int number) &&
+                    number >= 1 && number <= difficulties.Count)
+                {
+                    selectedDifficulty = difficulties[number - 1];
+                }
+                else
+                {
                     Console.WriteLine("Неверный выбор. Оставлен прежний уровень.");
-                    break;
+                }
             }
 
+            player.Difficulty = selectedDifficulty.Name;
 
             dataManager.SaveSettings(player);
 
@@ -91,25 +109,9 @@ namespace GameGuessNumber
                     case "1":
 
                         // Создаём выбранный игровой режим
-                        IGameLevel game;
+                        IGameLevel game = selectedDifficulty.CreateGame();
 
-                        if (player.Difficulty == "Сужение диапазона")
-                        {
-                            game = new NarrowRangeMode();
-                        }
-                        else if (player.Difficulty == "Горячо-холодно")
-                        {
-                            game = new HotColdMode();
-                        }
-                        else if (player.Difficulty == "Режим на время")
-                        {
-                            game = new TimeMode();
-                        }
-                        else
-                        {
-                            game = new NarrowRangeMode();
-                        }
-
+                        // Подписываемся на события игры
                         game.GameEvent += (sender, message) =>
                         {
                             Console.WriteLine(message.Message);
@@ -125,7 +127,6 @@ namespace GameGuessNumber
                         break;
 
                     case "2":
-
 
                         statistics.ShowStatistics(results, player.PlayerName);
                         break;
