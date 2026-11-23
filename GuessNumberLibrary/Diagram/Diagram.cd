@@ -25,14 +25,14 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="GuessNumber.Data.GameResult">
-    <Position X="11.5" Y="6.25" Width="1.5" />
+    <Position X="11.5" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAEAAAgAAAAAAQAAAAAAAAAAAAAAAAABAAAAAAEAAAA=</HashCode>
       <FileName>Data\GameResult.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="GuessNumber.Data.PlayerInfo">
-    <Position X="13" Y="8.25" Width="1.5" />
+    <Position X="12.75" Y="7.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAEAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Data\PlayerInfo.cs</FileName>
