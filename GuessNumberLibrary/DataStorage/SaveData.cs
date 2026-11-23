@@ -1,36 +1,33 @@
 using GuessNumber.Data;
 using GameGuessNumber.GuessNumber.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text.Json;
 
 namespace GameGuessNumber.GuessNumber.DataStorage
 {
     /// <summary>
-    /// Класс для сохранения и загрузки данных игры
+    /// Класс для сохранения и загрузки данных игры в текстовые файлы.
     /// </summary>
     public class SaveData : IDataManager
     {
         /// <summary>
-        /// Путь к папке, где будут храниться файлы с данными
+        /// Путь к папке с файлами игры.
         /// </summary>
         private string folderPath;
+
         /// <summary>
-        /// Имя файла для сохранения информации об игроке
+        /// Путь к файлу с информацией об игроке.
         /// </summary>
         private string playerInfoPath;
+
         /// <summary>
-        /// Путь к файлу, в котором будут храниться результаты игр
+        /// Путь к файлу со статистикой игр.
         /// </summary>
         private string statisticsPath;
 
         /// <summary>
-        /// Создаёт экземпляр класса SaveData и инициализирует пути к файлам для сохранения данных.
+        /// Создаёт папку и текстовые файлы, если их ещё нет.
         /// </summary>
         public SaveData()
         {
-         
             folderPath = Path.Combine(
                 AppDomain.CurrentDomain.BaseDirectory,
                 "DataFiles"
@@ -41,69 +38,112 @@ namespace GameGuessNumber.GuessNumber.DataStorage
                 Directory.CreateDirectory(folderPath);
             }
 
-            playerInfoPath = Path.Combine(folderPath, "playerInfo.json");
-            statisticsPath = Path.Combine(folderPath, "statistics.json");
+            playerInfoPath = Path.Combine(folderPath, "playerInfo.txt");
+            statisticsPath = Path.Combine(folderPath, "statistics.txt");
 
             if (!File.Exists(playerInfoPath))
             {
-                File.WriteAllText(playerInfoPath, "{}");
+                File.WriteAllText(playerInfoPath, "");
             }
 
             if (!File.Exists(statisticsPath))
             {
-                File.WriteAllText(statisticsPath, "[]");
+                File.WriteAllText(statisticsPath, "");
             }
         }
 
         /// <summary>
-        /// Сохранение информации об игроке
+        /// Сохраняет информацию об игроке.
         /// </summary>
+        /// <param name="player">Информация об игроке.</param>
         public void SaveSettings(PlayerInfo player)
         {
-            string json = JsonSerializer.Serialize(
-                player,
-                new JsonSerializerOptions { WriteIndented = true }
-            );
+            // Записываем имя и уровень сложности в две строки.
+            string[] lines =
+            {
+                player.PlayerName,
+                player.Difficulty
+            };
 
-            File.WriteAllText(playerInfoPath, json);
+            File.WriteAllLines(playerInfoPath, lines);
         }
 
         /// <summary>
-        /// Загрузка информации об игроке
+        /// Загружает информацию об игроке.
         /// </summary>
+        /// <returns>Настройки игрока.</returns>
         public PlayerInfo LoadSettings()
         {
-            string json = File.ReadAllText(playerInfoPath);
+            string[] lines = File.ReadAllLines(playerInfoPath);
 
-            PlayerInfo player = JsonSerializer.Deserialize<PlayerInfo>(json);
+            // Если данных нет, создаём настройки по умолчанию.
+            if (lines.Length < 2)
+            {
+                return new PlayerInfo();
+            }
 
-            return player ?? new PlayerInfo();
+            PlayerInfo player = new PlayerInfo();
+
+            player.PlayerName = lines[0];
+            player.Difficulty = lines[1];
+
+            return player;
         }
 
         /// <summary>
-        /// Сохранение результатов игр
+        /// Сохраняет результаты всех игр.
         /// </summary>
+        /// <param name="results">Список результатов игр.</param>
         public void SaveResults(List<GameResult> results)
         {
-            string json = JsonSerializer.Serialize(
-                results,
-                new JsonSerializerOptions { WriteIndented = true }
-            );
+            List<string> lines = new List<string>();
 
-            File.WriteAllText(statisticsPath, json);
+            foreach (GameResult result in results)
+            {
+                // Собираем данные одной игры в одну строку.
+                string line =
+                    result.PlayerName + ";" +
+                    result.Difficulty + ";" +
+                    result.IsWin + ";" +
+                    result.Attempts + ";" +
+                    result.Date.ToString("O");
+
+                lines.Add(line);
+            }
+
+            File.WriteAllLines(statisticsPath, lines);
         }
 
         /// <summary>
-        /// Загрузка результатов игр
+        /// Загружает результаты всех игр.
         /// </summary>
+        /// <returns>Список результатов игр.</returns>
         public List<GameResult> LoadResults()
         {
-            string json = File.ReadAllText(statisticsPath);
+            List<GameResult> results = new List<GameResult>();
 
-            List<GameResult> results =
-                JsonSerializer.Deserialize<List<GameResult>>(json);
+            string[] lines = File.ReadAllLines(statisticsPath);
 
-            return results ?? new List<GameResult>();
+            foreach (string line in lines)
+            {
+                string[] parts = line.Split(';');
+
+                // Проверяем, что в строке есть все пять значений.
+                if (parts.Length == 5)
+                {
+                    GameResult result = new GameResult();
+
+                    result.PlayerName = parts[0];
+                    result.Difficulty = parts[1];
+                    result.IsWin = bool.Parse(parts[2]);
+                    result.Attempts = int.Parse(parts[3]);
+                    result.Date = DateTime.Parse(parts[4]);
+
+                    results.Add(result);
+                }
+            }
+
+            return results;
         }
     }
 }

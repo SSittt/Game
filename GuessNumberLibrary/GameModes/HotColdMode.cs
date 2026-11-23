@@ -11,6 +11,20 @@ namespace GuessNumber.GameModes
     public class HotColdMode : IGameLevel
     {
         /// <summary>
+        /// Интерфейс для взаимодействия с игроком.
+        /// </summary>
+        private IUserInterface userInterface;
+
+        /// <summary>
+        /// создает игровой режим "Горячо-холодно".
+        /// </summary>
+        /// <param name="userInterface">Интерфейс для взаимодействия с игроком.</param>
+        public HotColdMode(IUserInterface userInterface)
+        {
+            this.userInterface = userInterface;
+        }
+
+        /// <summary>
         /// Название уровня сложности.
         /// </summary>
         public string Name => "Горячо-холодно";
@@ -93,7 +107,7 @@ namespace GuessNumber.GameModes
             {
                 SendMessage($"Попытка {attempts + 1}: введи число от 1 до 100:");
 
-                string? input = Console.ReadLine();
+                string input = userInterface.GetInput();
 
                 // Проверяем правильность введённого значения.
                 if (!int.TryParse(input, out int guess) || guess < 1 || guess > 100)

@@ -11,6 +11,20 @@ namespace GuessNumber.GameModes
     public class NarrowRangeMode : IGameLevel
     {
         /// <summary>
+        /// Интерфейс для взаимодействия с игроком.
+        /// </summary>
+        private IUserInterface userInterface;
+
+        /// <summary>
+        /// создвет игровой режим сужения диапазона.
+        /// </summary>
+        /// <param name="userInterface">Интерфейс для взаимодействия с игроком.</param>
+        public NarrowRangeMode(IUserInterface userInterface)
+        {
+            this.userInterface = userInterface;
+        }
+
+        /// <summary>
         /// Название уровня сложности.
         /// </summary>
         public string Name => "Сужение диапазона";
@@ -80,7 +94,7 @@ namespace GuessNumber.GameModes
                     SendMessage($"Попытка {attempts + 1}: введи число от {min} до {max}:");
                 }
 
-                string? input = Console.ReadLine();
+                string input = userInterface.GetInput();
 
                 // Проверяем правильность введённого значения.
                 if (!int.TryParse(input, out int guess) || guess < min || guess > max)

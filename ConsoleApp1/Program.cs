@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using GuessNumber.Data;
 using GuessNumber.GameModes;
 using GameGuessNumber.GuessNumber.DataStorage;
@@ -8,25 +6,30 @@ using GameGuessNumber.GuessNumber.Difficulties;
 
 namespace GameGuessNumber
 {
-    internal class Program
+     public class Program
     {
         static void Main(string[] args)
         {
-            SaveData dataManager = new SaveData();
+            // Инициализация пользовательского интерфейса и менеджера данных
+            IUserInterface userInterface = new ConsoleInterface();
 
+            // Инициализация менеджера данных для сохранения и загрузки настроек и результатов
+            IDataManager dataManager = new SaveData();
+
+            // Загрузка настроек игрока
             PlayerInfo player = dataManager.LoadSettings();
 
             // Создаём список уровней сложности
             List<IDifficulty> difficulties = new List<IDifficulty>
             {
                 new GameDifficulty("Сужение диапазона",
-                    () => new NarrowRangeMode()),
+                    () => new NarrowRangeMode(userInterface)),
              
                 new GameDifficulty("Горячо-холодно",
-                    () => new HotColdMode()),
+                    () => new HotColdMode(userInterface)),
 
                 new GameDifficulty("Режим на время",
-                    () => new TimeMode())
+                    () => new TimeMode(userInterface))
             };
 
             // Ищем сохранённый уровень игрока
@@ -41,32 +44,32 @@ namespace GameGuessNumber
                 }
             }
 
-            Console.WriteLine("Игра «Угадай число»");
-            Console.WriteLine();
+            userInterface.ShowMessage("Игра <<Угадай число>>");
+            userInterface.ShowMessage("");
 
-            Console.WriteLine("Текущее имя: " + player.PlayerName);
-            Console.Write("Введите своё имя: ");
+            userInterface.ShowMessage("Текущее имя:" + player.PlayerName);
+            userInterface.ShowMessage("Введите новое имя (или нажмите Enter, чтобы оставить прежнее):");
 
-            string name = Console.ReadLine() ?? "";
+            string name = userInterface.GetInput();
 
             if (!string.IsNullOrWhiteSpace(name))
             {
                 player.PlayerName = name;
             }
 
-            Console.WriteLine("\nВыбранный уровень: " + selectedDifficulty.Name);
-            Console.WriteLine("Выберите уровень сложности:");
+            userInterface.ShowMessage("\nВыбранный уровень: " + selectedDifficulty.Name);
+            userInterface.ShowMessage("Выберите уровень сложности:");
 
             // Выводим все доступные уровни
             for (int i = 0; i < difficulties.Count; i++)
             {
-                Console.WriteLine((i + 1) + ". " + difficulties[i].Name);
+                userInterface.ShowMessage ((i + 1) + ". " + difficulties[i].Name);
             }
 
-            Console.WriteLine("Нажмите Enter, чтобы оставить прежний уровень.");
-            Console.Write("Ваш выбор: ");
+            userInterface.ShowMessage("Нажмите Enter, чтобы оставить прежний уровень.");
+            userInterface.ShowMessage("Ваш выбор: ");
 
-            string choice = Console.ReadLine() ?? "";
+            string choice = userInterface.GetInput();
 
             if (choice != "")
             {
@@ -77,7 +80,7 @@ namespace GameGuessNumber
                 }
                 else
                 {
-                    Console.WriteLine("Неверный выбор. Оставлен прежний уровень.");
+                    userInterface.ShowMessage("Неверный выбор. Оставлен прежний уровень.");
                 }
             }
 
@@ -85,24 +88,23 @@ namespace GameGuessNumber
 
             dataManager.SaveSettings(player);
 
-            Console.WriteLine("\nПривет, " + player.PlayerName + "!");
-            Console.WriteLine("Текущий уровень: " + player.Difficulty);
+            userInterface.ShowMessage("\nПривет, " + player.PlayerName + "!");
+            userInterface.ShowMessage("Текущий уровень: " + player.Difficulty);
 
             List<GameResult> results = dataManager.LoadResults();
 
-            Statistics statistics = new Statistics();
+            IStatistics statistics = new Statistics(userInterface);
 
             bool exit = false;
 
             while (!exit)
             {
-                Console.WriteLine("\n===== МЕНЮ =====");
-                Console.WriteLine("1. Начать игру");
-                Console.WriteLine("2. Посмотреть статистику");
-                Console.WriteLine("0. Выход");
-                Console.Write("Выбери действие: ");
-
-                choice = Console.ReadLine() ?? "";
+                userInterface.ShowMessage("\n===== МЕНЮ =====");
+                userInterface.ShowMessage("1. Начать игру");
+                userInterface.ShowMessage("2. Посмотреть статистику");
+                userInterface.ShowMessage("0. Выход");
+                userInterface.ShowMessage("Выбери действие: ");
+                choice = userInterface.GetInput();
 
                 switch (choice)
                 {
@@ -114,7 +116,7 @@ namespace GameGuessNumber
                         // Подписываемся на события игры
                         game.GameEvent += (sender, message) =>
                         {
-                            Console.WriteLine(message.Message);
+                            userInterface.ShowMessage(message.Message);
                         };
 
                         GameResult result = game.Play(player.PlayerName);
@@ -123,7 +125,7 @@ namespace GameGuessNumber
 
                         dataManager.SaveResults(results);
 
-                        Console.WriteLine("\nРезультат игры сохранён!");
+                        userInterface.ShowMessage("\nРезультат игры сохранён!");
                         break;
 
                     case "2":
@@ -134,12 +136,12 @@ namespace GameGuessNumber
                     case "0":
 
                         exit = true;
-                        Console.WriteLine("До свидания!");
+                        userInterface.ShowMessage("До свидания!");
                         break;
 
                     default:
 
-                        Console.WriteLine("Неверный пункт меню.");
+                        userInterface.ShowMessage("Неверный пункт меню.");
                         break;
                 }
             }

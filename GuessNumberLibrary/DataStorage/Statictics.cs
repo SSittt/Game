@@ -1,11 +1,17 @@
 using GuessNumber.Data;
-using System;
-using System.Collections.Generic;
+using GameGuessNumber.GuessNumber.Interfaces;
 
 namespace GameGuessNumber.GuessNumber.DataStorage
 {
-    public class Statistics
+    public class Statistics : IStatistics
     {
+        private IUserInterface userInterface;
+
+        public Statistics(IUserInterface userInterface)
+        {
+            this.userInterface = userInterface;
+        }
+
         /// <summary>
         /// Показывает статистику игрока по его играм.
         /// </summary>
@@ -13,8 +19,8 @@ namespace GameGuessNumber.GuessNumber.DataStorage
         /// <param name="playerName">Имя игрока, для которого отображается статистика.</param>
         public void ShowStatistics(List<GameResult> results, string playerName)
         {
-            Console.WriteLine("\n===== СТАТИСТИКА ИГРОКА =====");
-            Console.WriteLine("Игрок: " + playerName);
+            userInterface.ShowMessage("\n===== СТАТИСТИКА ИГРОКА =====");
+            userInterface.ShowMessage       ("Игрок: " + playerName);
 
             List<GameResult> playerResults = results.FindAll(
                 result => result.PlayerName == playerName
@@ -22,7 +28,7 @@ namespace GameGuessNumber.GuessNumber.DataStorage
 
             if (playerResults.Count == 0)
             {
-                Console.WriteLine("У тебя пока нет сыгранных игр.");
+                userInterface.ShowMessage("У тебя пока нет сыгранных игр.");
                 return;
             }
 
@@ -43,20 +49,20 @@ namespace GameGuessNumber.GuessNumber.DataStorage
 
             int winPercent = wins * 100 / playerResults.Count;
 
-            Console.WriteLine("Всего игр: " + playerResults.Count);
-            Console.WriteLine("Побед: " + wins);
-            Console.WriteLine("Поражений: " + losses);
-            Console.WriteLine("Процент побед: " + winPercent + "%");
+            userInterface.ShowMessage("Всего игр: " + playerResults.Count);
+            userInterface.ShowMessage("Побед: " + wins);
+            userInterface.ShowMessage("Поражений: " + losses);
+            userInterface.ShowMessage   ("Процент побед: " + winPercent + "%");
 
-            Console.WriteLine("\n===== ИСТОРИЯ ИГР =====");
+            userInterface.ShowMessage("\n===== ИСТОРИЯ ИГР =====");
 
             foreach (GameResult result in playerResults)
             {
-                Console.WriteLine("-------------------------");
-                Console.WriteLine("Уровень: " + result.Difficulty);
-                Console.WriteLine("Результат: " + (result.IsWin ? "Победа" : "Поражение"));
-                Console.WriteLine("Попытки: " + result.Attempts);
-                Console.WriteLine("Дата: " + result.Date);
+                userInterface.ShowMessage("-------------------------");
+                userInterface.ShowMessage("Уровень: " + result.Difficulty);
+                userInterface.ShowMessage("Результат: " + (result.IsWin ? "Победа" : "Поражение"));
+                userInterface.ShowMessage("Попытки: " + result.Attempts);
+                userInterface.ShowMessage("Дата: " + result.Date);
             }
         }
     }

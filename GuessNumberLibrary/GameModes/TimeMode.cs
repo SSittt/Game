@@ -1,7 +1,6 @@
 using GameGuessNumber.GuessNumber.Events;
 using GameGuessNumber.GuessNumber.Interfaces;
 using GuessNumber.Data;
-using System;
 using System.Diagnostics;
 
 namespace GuessNumber.GameModes
@@ -13,6 +12,20 @@ namespace GuessNumber.GameModes
     /// </summary>
     public class TimeMode : IGameLevel
     {
+        /// <summary>
+        /// Интерфейс для взаимодействия с игроком.
+        /// </summary>
+        private IUserInterface userInterface;
+
+        /// <summary>
+        /// создвет игровой режим сужения диапазона.
+        /// </summary>
+        /// <param name="userInterface">Интерфейс для взаимодействия с игроком.</param>
+        public TimeMode(IUserInterface userInterface)
+        {
+            this.userInterface = userInterface;
+        }
+
         /// <summary>
         /// Название уровня сложности.
         /// </summary>
@@ -86,7 +99,7 @@ namespace GuessNumber.GameModes
                 SendMessage("Осталось времени: " + remainingTime + " секунд.");
                 SendMessage("Введи число от 1 до 100:");
 
-                string? input = Console.ReadLine();
+                string input = userInterface.GetInput();
 
                 // Проверяем, не закончилось ли время.
                 if (stopwatch.Elapsed.TotalSeconds + penalty >= 60)

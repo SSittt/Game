@@ -9,19 +9,31 @@ namespace GameGuessNumber.GuessNumber.Difficulties
     /// </summary>
     public class GameDifficulty : IDifficulty
     {
-        // Название сложности
+        /// <summary>
+        /// Название уровня сложности
+        /// </summary>
         public string Name { get; private set; }
 
-        // Функция создания игрового режима
+        /// <summary>
+        /// Функция для создания игрового режима на основе выбранного уровня сложности.
+        /// </summary>
         private Func<IGameLevel> createGame;
 
+        /// <summary>
+        /// Создает новый уровень сложности с указанным названием и функцией создания игрового режима.
+        /// </summary>
+        /// <param name="name">Название уровня сложности</param>
+        /// <param name="game">Функция для создания игрового режима</param>
         public GameDifficulty(string name, Func<IGameLevel> game)
         {
             Name = name;
             createGame = game;
         }
 
-        // Создаём игровой режим
+        /// <summary>
+        /// создает игровой режим на основе выбранного уровня сложности.
+        /// </summary>
+        /// <returns>созданный игровой режим</returns>
         public IGameLevel CreateGame()
         {
             return createGame();

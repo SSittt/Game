@@ -1,92 +1,104 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="GuessNumber.Data.GameResult" Collapsed="true">
-    <Position X="0.5" Y="2.25" Width="1.5" />
+  <Class Name="GameGuessNumber.GuessNumber.Interfaces.ConsoleInterface">
+    <Position X="5.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data\ConsoleInterface.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="GameGuessNumber.GuessNumber.DataStorage.SaveData">
+    <Position X="15.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAIAgMAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>DataStorage\SaveData.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.1" />
+  </Class>
+  <Class Name="GameGuessNumber.GuessNumber.DataStorage.Statistics">
+    <Position X="14" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataStorage\Statictics.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="GuessNumber.Data.GameResult">
+    <Position X="11.5" Y="6.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAEAAAgAAAAAAQAAAAAAAAAAAAAAAAABAAAAAAEAAAA=</HashCode>
       <FileName>Data\GameResult.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="GuessNumber.Data.PlayerInfo" Collapsed="true">
-    <Position X="0.5" Y="0.75" Width="1.5" />
+  <Class Name="GuessNumber.Data.PlayerInfo">
+    <Position X="13" Y="8.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAEAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Data\PlayerInfo.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="GameGuessNumber.GuessNumber.DataStorage.SaveData" Collapsed="true">
-    <Position X="1" Y="3" Width="1.5" />
+  <Class Name="GuessNumber.GameModes.NarrowRangeMode">
+    <Position X="7.5" Y="6.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>BAAAAAAAAAAAAIAgMAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
-      <FileName>DataStorage\SaveData.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Orientation="Left" Position="0.1" />
-  </Class>
-  <Class Name="GameGuessNumber.GuessNumber.DataStorage.Statistics" Collapsed="true">
-    <Position X="0.5" Y="1.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>DataStorage\Statictics.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="GameGuessNumber.GuessNumber.Events.GameMessage" Collapsed="true">
-    <Position X="1" Y="4" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
-      <FileName>Events\GameMessage.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="GameGuessNumber.GuessNumber.Difficulties.GameDifficulty" Collapsed="true">
-    <Position X="3.25" Y="0.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAACAAAAAAAAAAAAAAACAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>GameDiffi\Difficulties.cs</FileName>
+      <HashCode>AAAAABAAABAAAAAAACCAAAQACAAAAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>GameModes\NarrowRandeMode.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="GuessNumber.GameModes.HotColdMode" Collapsed="true">
-    <Position X="3.25" Y="2.25" Width="1.5" />
+  <Class Name="GuessNumber.GameModes.HotColdMode">
+    <Position X="4.25" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAABAAAAAAACCAAAQACAAAAAAAgAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAABAAABAAAAAAACCAAAQACAAAAAAAgAAAAAAAAAA=</HashCode>
       <FileName>GameModes\HotColdMode.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="GuessNumber.GameModes.NarrowRangeMode">
-    <Position X="5.25" Y="1.25" Width="1.5" />
+  <Class Name="GuessNumber.GameModes.TimeMode">
+    <Position X="9.5" Y="6.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAABAAAAAAACCAAAQACAAAAAAAgAAAAAAAAAA=</HashCode>
-      <FileName>GameModes\NarrowRandeMode.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="1.3" />
-  </Class>
-  <Class Name="GuessNumber.GameModes.TimeMode" Collapsed="true">
-    <Position X="3.25" Y="1.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAABAAAAAAACCAAAQACAAAAAAAgAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAABAAABAAAAAAACCAAAQACAAAAAAAgAAAAAAAAAA=</HashCode>
       <FileName>GameModes\TimeMode.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Interface Name="GameGuessNumber.GuessNumber.Interfaces.IGameLevel">
-    <Position X="7.25" Y="1.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQACAAAAAAAgAAAAAAAAAA=</HashCode>
-      <FileName>Interfaces\IGameMode.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
+  <Class Name="System.Object">
+    <Position X="11.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
   <Interface Name="GameGuessNumber.GuessNumber.Interfaces.IDataManager" Collapsed="true">
-    <Position X="9.5" Y="1.5" Width="1.5" />
+    <Position X="4" Y="0.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAIAgEAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
       <FileName>Interfaces\ISaveData.cs</FileName>
     </TypeIdentifier>
   </Interface>
+  <Interface Name="GameGuessNumber.GuessNumber.Interfaces.IStatistics" Collapsed="true">
+    <Position X="2" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IStatistics.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="GameGuessNumber.GuessNumber.Interfaces.IGameLevel" Collapsed="true">
+    <Position X="14" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQACAAAAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IGameMode.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
   <Interface Name="GameGuessNumber.GuessNumber.Interfaces.IDifficulty" Collapsed="true">
-    <Position X="9.5" Y="2.25" Width="1.5" />
+    <Position X="16" Y="1" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAACAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Interfaces\Idifficulty.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="GameGuessNumber.GuessNumber.Interfaces.IUserInterface">
+    <Position X="1" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IUserInterface.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Font Name="Segoe UI" Size="9" />
